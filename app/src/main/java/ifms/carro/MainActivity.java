@@ -14,20 +14,22 @@ public class MainActivity extends AppCompatActivity {
 
     private Carros dados;
     private ListView listView;
+    ArrayAdapter<Carro> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        carregarDados();
         iniciarLista();
+        carregarDados();
     }
 
     private void iniciarLista() {
         listView = findViewById(R.id.lista);
 
-        ArrayAdapter<Carro> adapter = new ArrayAdapter<>(
+        dados = new Carros();
+        adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_list_item_1,
                 dados
@@ -37,7 +39,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void carregarDados() {
+        HttpListener<Carros> httpListener = new HttpListener<Carros>() {
+            @Override
+            public void onLoad(Carros carros) {
+                dados.clear();
+                dados.addAll(carros);
+
+                adapter.notifyDataSetChanged();
+            }
+        };
+
         CarroRepositorio repo = new CarroRepositorio();
-        dados = repo.loadCarros();
+        repo.loadCarros(httpListener);
     }
 }
