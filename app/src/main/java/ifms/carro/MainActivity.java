@@ -2,9 +2,12 @@ package ifms.carro;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -14,10 +17,12 @@ import ifms.carro.repositorio.CarroRepositorio;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private Carros dados = new Carros();
     private ListView listView;
     private ArrayAdapter<Carro> adapter;
     private ProgressBar progressBar;
+    private Button btnAdicionar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +30,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         progressBar = findViewById(R.id.progress);
+
         iniciarLista();
+        inicarBotaoCadastrar();
+
         carregarDados();
+    }
+
+    private void inicarBotaoCadastrar() {
+        btnAdicionar = findViewById(R.id.btnAdicionar);
+
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Log.i(TAG, "onClick: Clicou no botao");
+
+                Intent intent = new Intent(MainActivity.this, VeiculoActivity.class);
+                startActivity(intent);
+            }
+        };
+
+        btnAdicionar.setOnClickListener(onClickListener);
     }
 
     private void iniciarLista() {
